@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
     id("org.springframework.boot") version "2.3.4.RELEASE"
@@ -8,6 +7,7 @@ plugins {
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.allopen") version "1.3.72"
     kotlin("kapt") version "1.3.61"
+    kotlin("plugin.jpa") version "1.3.61"
 }
 
 group = "com.example"
@@ -17,8 +17,6 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 repositories {
     mavenCentral()
 }
-
-//extra["vaadinVersion"] = "14.3.6"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -34,12 +32,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
-    }
-}
-
-dependencyManagement {
-    imports {
-        //  mavenBom("com.vaadin:vaadin-bom:${property("vaadinVersion")}")
     }
 }
 
