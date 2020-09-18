@@ -26,6 +26,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mustache")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    compile("org.flywaydb:flyway-core:6.0.8")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
