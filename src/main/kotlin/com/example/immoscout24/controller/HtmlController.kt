@@ -50,6 +50,7 @@ class HtmlController(val historyService: SearchHistoryService) {
         val loggedInUser = oauth2User.attributes["login"] as String
 
         println("$loggedInUser   $input")
+        model.addAttribute("userName", loggedInUser)
         model["history"] = historyService.findUserSearchResult(username = loggedInUser)
         return "landing"
     }
