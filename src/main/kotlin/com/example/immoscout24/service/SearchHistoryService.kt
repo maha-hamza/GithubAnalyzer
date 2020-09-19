@@ -6,5 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 class SearchHistoryService(val searchHistoryRepository: SearchHistoryRepository) {
 
-    fun findUserSearchResult(username: String) = searchHistoryRepository.findAllByAddedBy(username)
+    fun findUserSearchResult(username: String) = searchHistoryRepository
+            .findAllByAddedBy(username)
+            .sortedByDescending { it.addedAt }
 }

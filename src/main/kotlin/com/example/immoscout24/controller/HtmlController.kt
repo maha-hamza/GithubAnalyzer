@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 
@@ -40,4 +42,22 @@ class HtmlController(val historyService: SearchHistoryService) {
         return "landing"
     }
 
+    @PostMapping("/analyze")
+    fun analyze(model: Model,
+                @ModelAttribute("input") input: AnalyzingInput,
+                @RegisteredOAuth2AuthorizedClient authorizedClient: OAuth2AuthorizedClient,
+                @AuthenticationPrincipal oauth2User: OAuth2User): String {
+        val loggedInUser = oauth2User.attributes["login"] as String
+
+        println("$loggedInUser   $input")
+        model["history"] = historyService.findUserSearchResult(username = loggedInUser)
+        return "landing"
+    }
+
+
 }
+
+data class AnalyzingInput(
+        val repoOwner: String,
+        val repoName: String
+)

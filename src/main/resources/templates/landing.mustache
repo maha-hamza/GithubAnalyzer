@@ -32,12 +32,26 @@
 <div class="limiter">
     <div class="container-login100" style="width:80% !important">
         <div class="wrap-login100 p-t-85 p-b-20">
-            <span class="login100-form-title p-b-70">
+            <form class="login100-form validate-form" method="post" action="/analyze" name="input">
+					<span class="login100-form-title p-b-70">
 						Github analyzer
 					</span>
-            <span class="login100-form-avatar">
+                <span class="login100-form-avatar">
 						<img src="images/avatar-02.png" alt="AVATAR">
 					</span>
+                <!--  -------------------------------- -->
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" name="repoOwner" class="form-control" id="input-email"
+                               placeholder="repo-owner">&nbsp;
+                        <input type="text" name="repoName" class="form-control" id="input-email"
+                               placeholder="repo name"> &nbsp;
+                        <button class="btn btn-outline-success">Analyze</button>
+                    </div>
+                </div>
+                <!--  -------------------------------- -->
+            </form>
+
             <table class="table table-bordered table-hover">
                 <tr scope="row">
                     <th>id</th>
