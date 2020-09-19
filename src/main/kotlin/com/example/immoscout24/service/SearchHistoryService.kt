@@ -16,7 +16,8 @@ class SearchHistoryService(val searchHistoryRepository: SearchHistoryRepository)
             repoUrl: String,
             numOfPr: Long,
             numOfCommits: Long,
-            addedBy: String
+            addedBy: String,
+            readme: String?
     ) {
         searchHistoryRepository.save(
                 SearchHistory(
@@ -24,7 +25,7 @@ class SearchHistoryService(val searchHistoryRepository: SearchHistoryRepository)
                         numOfCommits = numOfCommits,
                         numOfPrs = numOfPr,
                         addedAt = LocalDateTime.now(),
-                        readMe = null,
+                        readMe = readme,
                         repoUrl = repoUrl
                 )
         )

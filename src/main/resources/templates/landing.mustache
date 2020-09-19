@@ -54,21 +54,21 @@
 
             <table class="table table-bordered table-hover">
                 <tr scope="row">
-                    <th>id</th>
-                    <th>addedBy</th>
                     <th>addedAt</th>
                     <th>repoUrl</th>
                     <th>numOfCommits</th>
                     <th>numOfPrs</th>
+                    <th>ReadMe</th>
                 </tr>
                 {{#history}}
                     <tr scope="row">
-                        <td>{{id}}</td>
-                        <td>{{addedBy}}</td>
                         <td>{{addedAt}}</td>
                         <td>{{repoUrl}}</td>
                         <td>{{numOfCommits}}</td>
                         <td>{{numOfPrs}}</td>
+                        <td>{{#readMe}}
+                            {{.}}
+                        {{/readMe}}</td>
                     </tr>
                 {{/history}}
             </table>
