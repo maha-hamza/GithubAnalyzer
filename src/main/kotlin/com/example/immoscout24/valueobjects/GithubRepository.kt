@@ -10,3 +10,7 @@ data class Item(
         val commits_url: String,
         val pulls_url: String
 )
+
+data class GithubItemContainer(
+        val node_id: String
+)
