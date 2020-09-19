@@ -26,6 +26,14 @@
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
     <!--===============================================================================================-->
+    <style>
+div.terms
+{
+  width: 20em;
+  height: 15em;
+  overflow: auto;
+}
+    </style>
 </head>
 <body>
 
@@ -66,16 +74,19 @@
                         <td>{{repoUrl}}</td>
                         <td>{{numOfCommits}}</td>
                         <td>{{numOfPrs}}</td>
-                        <td>{{#readMe}}
-                            {{.}}
-                        {{/readMe}}</td>
+                        <td>
+                            <div class="terms">
+                                {{#readMe}}
+                                    {{.}}
+                                {{/readMe}}
+                            </div>
+                        </td>
                     </tr>
                 {{/history}}
             </table>
         </div>
     </div>
 </div>
-
 
 <div id="dropDownSelect1"></div>
 
