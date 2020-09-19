@@ -1,6 +1,8 @@
 package com.example.immoscout24.controller
 
+import com.example.immoscout24.service.GithubAnalyzerService
 import com.example.immoscout24.service.SearchHistoryService
+import com.example.immoscout24.valueobjects.AnalyzingInput
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient
@@ -15,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 
 @Controller
-class HtmlController(val historyService: SearchHistoryService) {
+class HtmlController(
+        val historyService: SearchHistoryService,
+        val githubAnalyzerService: GithubAnalyzerService
+) {
 
     @RequestMapping("/securedPage")
     fun securedPage(model: Model,
@@ -48,17 +53,17 @@ class HtmlController(val historyService: SearchHistoryService) {
                 @RegisteredOAuth2AuthorizedClient authorizedClient: OAuth2AuthorizedClient,
                 @AuthenticationPrincipal oauth2User: OAuth2User): String {
         val loggedInUser = oauth2User.attributes["login"] as String
-
-        println("$loggedInUser   $input")
         model.addAttribute("userName", loggedInUser)
+
+        githubAnalyzerService
+                .analyzeGithub(
+                        loggedInUser = loggedInUser,
+                        repoOwner = input.repoOwner,
+                        repoName = input.repoName
+                )
         model["history"] = historyService.findUserSearchResult(username = loggedInUser)
         return "landing"
     }
 
 
 }
-
-data class AnalyzingInput(
-        val repoOwner: String,
-        val repoName: String
-)
