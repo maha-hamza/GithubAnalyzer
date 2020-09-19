@@ -1,6 +1,6 @@
 package com.example.immoscout24.controller
 
-import com.example.immoscout24.repositories.SearchHistoryRepository
+import com.example.immoscout24.service.SearchHistoryService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 
 @Controller
-class HtmlController(val repo: SearchHistoryRepository) {
+class HtmlController(val historyService: SearchHistoryService) {
 
     @RequestMapping("/securedPage")
     fun securedPage(model: Model,
@@ -31,8 +31,12 @@ class HtmlController(val repo: SearchHistoryRepository) {
     }
 
     @GetMapping("/landing")
-    fun landing(model: Model): String {
-        model["history"] = repo.findAll()
+    fun landing(model: Model,
+                @RegisteredOAuth2AuthorizedClient authorizedClient: OAuth2AuthorizedClient,
+                @AuthenticationPrincipal oauth2User: OAuth2User): String {
+        val username = oauth2User.attributes["login"] as String
+        model.addAttribute("userName", username)
+        model["history"] = historyService.findUserSearchResult(username = username)
         return "landing"
     }
 
