@@ -19,7 +19,11 @@ class GithubAnalyzerService(val historyService: SearchHistoryService) {
         val restTemplate = RestTemplate()
         val result = restTemplate.getForObject<GithubRepository>("https://api.github.com/search/repositories?q=repo:$repoOwner/$repoName", GithubRepository::class.java)!!
 
-        val numOfCommits = restTemplate.getForObject<List<GithubItemContainer>>(result.items[0].commits_url.replace("{/sha}", "") + "?per_page=${Int.MAX_VALUE}", List::class.java).count()
+        var numOfCommits = 0
+        for (i in 1..20) {
+            numOfCommits += restTemplate.getForObject<List<GithubItemContainer>>(result.items[0].commits_url.replace("{/sha}", "") + "?page=$i", List::class.java).count()
+        }
+
         val numOfPrs = restTemplate.getForObject<List<GithubItemContainer>>(result.items[0].pulls_url.replace("{/number}", ""), List::class.java).count()
 
         historyService.saveSearchHistory(
@@ -28,6 +32,5 @@ class GithubAnalyzerService(val historyService: SearchHistoryService) {
                 numOfPr = numOfPrs.toLong(),
                 addedBy = loggedInUser
         )
-        println(result)
     }
 }
