@@ -1,6 +1,5 @@
 package com.example.immoscout24.service
 
-import com.example.immoscout24.model.SearchHistory
 import com.example.immoscout24.valueobjects.GithubItemContainer
 import com.example.immoscout24.valueobjects.GithubRepository
 import com.example.immoscout24.valueobjects.ReadMe
@@ -11,13 +10,13 @@ import java.net.URL
 
 
 @Service
-class GithubAnalyzerService(val historyService: SearchHistoryService) {
+class GithubAnalyzerService {
 
     fun analyzeGithub(
             loggedInUser: String,
             repoOwner: String,
             repoName: String
-    ): List<SearchHistory> {
+    ): AnalysisResult {
 
         val restTemplate = RestTemplate()
         val result = restTemplate.getForObject<GithubRepository>("https://api.github.com/search/repositories?q=repo:$repoOwner/$repoName", GithubRepository::class.java)!!
@@ -32,13 +31,18 @@ class GithubAnalyzerService(val historyService: SearchHistoryService) {
         val readme = restTemplate.getForObject<ReadMe>("https://api.github.com/repos/$repoOwner/$repoName/readme", ReadMe::class.java)
         val content = URL(readme?.download_url).readText()
 
-        historyService.saveSearchHistory(
+        return AnalysisResult(
                 repoUrl = result.items[0].html_url,
                 numOfCommits = numOfCommits.toLong(),
-                numOfPr = numOfPrs.toLong(),
-                addedBy = loggedInUser,
-                readme = content
+                readMe = content,
+                numOfPrs = numOfPrs.toLong()
         )
-        return historyService.findUserSearchResult(loggedInUser)
     }
 }
+
+data class AnalysisResult(
+        val repoUrl: String,
+        val numOfCommits: Long,
+        val numOfPrs: Long,
+        val readMe: String
+)
