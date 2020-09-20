@@ -1,9 +1,9 @@
 package com.example.immoscout24.service
 
-import com.example.immoscout24.exceptions.InvalidCommitsRequest
-import com.example.immoscout24.exceptions.InvalidPullRequestRequest
-import com.example.immoscout24.exceptions.InvalidReadMeRequest
-import com.example.immoscout24.exceptions.InvalidRepositoryRequest
+import com.example.immoscout24.exceptions.InvalidCommitsRequestException
+import com.example.immoscout24.exceptions.InvalidPullRequestRequestException
+import com.example.immoscout24.exceptions.InvalidReadMeRequestException
+import com.example.immoscout24.exceptions.InvalidRepositoryRequestException
 import com.example.immoscout24.service.utils.validateLoggedInUser
 import com.example.immoscout24.service.utils.validateRepoName
 import com.example.immoscout24.service.utils.validateRepoOwner
@@ -43,7 +43,7 @@ class GithubAnalyzerService {
                     numOfPrs = pullRequestsCount
             )
         } else {
-            throw InvalidRepositoryRequest("Couldn't Identify Repository with the given input[$repoOwner:$repoName]")
+            throw InvalidRepositoryRequestException("Couldn't Identify Repository with the given input[$repoOwner:$repoName]")
         }
     }
 
@@ -53,7 +53,7 @@ class GithubAnalyzerService {
         if (result.isSuccess) {
             return result.body.size.toLong()
         } else {
-            throw InvalidPullRequestRequest("Unexpected error while requesting [$url]")
+            throw InvalidPullRequestRequestException("Unexpected error while requesting [$url]")
         }
     }
 
@@ -63,7 +63,7 @@ class GithubAnalyzerService {
         if (result.isSuccess) {
             return result.body.size.toLong()
         } else {
-            throw InvalidCommitsRequest("Unexpected error while requesting [$url]")
+            throw InvalidCommitsRequestException("Unexpected error while requesting [$url]")
         }
     }
 
@@ -73,7 +73,7 @@ class GithubAnalyzerService {
         if (result.isSuccess) {
             return URL(result.body.download_url).readText()
         } else {
-            throw InvalidReadMeRequest("Unexpected error while requesting [$url]")
+            throw InvalidReadMeRequestException("Unexpected error while requesting [$url]")
         }
     }
 }

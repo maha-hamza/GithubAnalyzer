@@ -1,5 +1,6 @@
 package com.example.immoscout24.service
 
+import com.example.immoscout24.exceptions.InvalidSearchHistoryOperationException
 import com.example.immoscout24.model.SearchHistory
 import com.example.immoscout24.repositories.SearchHistoryRepository
 import org.springframework.stereotype.Service
@@ -18,15 +19,19 @@ class SearchHistoryService(val searchHistoryRepository: SearchHistoryRepository)
             addedBy: String,
             readme: String?
     ) {
-        searchHistoryRepository.save(
-                SearchHistory(
-                        addedBy = addedBy,
-                        numOfCommits = numOfCommits,
-                        numOfPrs = numOfPr,
-                        addedAt = LocalDateTime.now(),
-                        readMe = readme,
-                        repoUrl = repoUrl
-                )
-        )
+        try {
+            searchHistoryRepository.save(
+                    SearchHistory(
+                            addedBy = addedBy,
+                            numOfCommits = numOfCommits,
+                            numOfPrs = numOfPr,
+                            addedAt = LocalDateTime.now(),
+                            readMe = readme,
+                            repoUrl = repoUrl
+                    )
+            )
+        } catch (e: Exception) {
+            throw InvalidSearchHistoryOperationException("Something Wrong While saving entry: [${e.stackTrace}]")
+        }
     }
 }
