@@ -1,0 +1,1 @@
+ALTER TABLE search_history ALTER COLUMN repo_url TYPE VARCHAR(100);

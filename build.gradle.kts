@@ -27,6 +27,8 @@ dependencies {
     compile("org.flywaydb:flyway-core:6.0.8")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("com.konghq:unirest-objectmapper-jackson:2.3.17")
+    implementation("com.konghq:unirest-java:3.10.00")
 
     implementation("org.springframework.security.oauth:spring-security-oauth2:2.5.0.RELEASE")
 

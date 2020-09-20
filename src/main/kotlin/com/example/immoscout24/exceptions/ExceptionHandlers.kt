@@ -5,3 +5,7 @@ import java.lang.RuntimeException
 class InvalidLoggedInUserException(msg: String) : RuntimeException(msg)
 class InvalidRepoOwnerException(msg: String) : RuntimeException(msg)
 class InvalidRepoNameException(msg: String) : RuntimeException(msg)
+class InvalidRepositoryRequest(msg: String) : RuntimeException(msg)
+class InvalidPullRequestRequest(msg: String) : RuntimeException(msg)
+class InvalidCommitsRequest(msg: String) : RuntimeException(msg)
+class InvalidReadMeRequest(msg: String) : RuntimeException(msg)

@@ -1,9 +1,9 @@
 package com.example.immoscout24.service
 
-import com.example.immoscout24.exceptions.InvalidLoggedInUserException
-import com.example.immoscout24.exceptions.InvalidRepoNameException
-import com.example.immoscout24.exceptions.InvalidRepoOwnerException
 import com.example.immoscout24.model.SearchHistory
+import com.example.immoscout24.service.utils.validateLoggedInUser
+import com.example.immoscout24.service.utils.validateRepoName
+import com.example.immoscout24.service.utils.validateRepoOwner
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,7 +24,7 @@ class HtmlService(
         validateLoggedInUser(loggedInUser)
         validateRepoName(repoName)
         validateRepoOwner(repoOwner)
-        
+
         val result = githubAnalyzerService.analyzeGithub(loggedInUser, repoOwner, repoName)
         historyService.saveSearchHistory(
                 repoUrl = result.repoUrl,
@@ -34,20 +34,5 @@ class HtmlService(
                 readme = result.readMe
         )
         return prepareSearchHistoryForLoggedInUser(loggedInUser)
-    }
-
-    private fun validateLoggedInUser(user: String) {
-        if (user.isBlank() || user.isEmpty())
-            throw InvalidLoggedInUserException("[LoggedIn User] can't be Empty or Blank")
-    }
-
-    private fun validateRepoOwner(repoOwner: String) {
-        if (repoOwner.isBlank() || repoOwner.isEmpty())
-            throw InvalidRepoOwnerException("[Repository Owner] can't be Empty or Blank")
-    }
-
-    private fun validateRepoName(repo: String) {
-        if (repo.isBlank() || repo.isEmpty())
-            throw InvalidRepoNameException("[Repository Name] can't be Empty or Blank")
     }
 }

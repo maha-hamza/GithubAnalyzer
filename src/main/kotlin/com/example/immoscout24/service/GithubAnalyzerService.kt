@@ -1,14 +1,19 @@
 package com.example.immoscout24.service
 
+import com.example.immoscout24.exceptions.InvalidCommitsRequest
+import com.example.immoscout24.exceptions.InvalidPullRequestRequest
+import com.example.immoscout24.exceptions.InvalidReadMeRequest
+import com.example.immoscout24.exceptions.InvalidRepositoryRequest
+import com.example.immoscout24.service.utils.validateLoggedInUser
+import com.example.immoscout24.service.utils.validateRepoName
+import com.example.immoscout24.service.utils.validateRepoOwner
 import com.example.immoscout24.valueobjects.AnalysisResult
 import com.example.immoscout24.valueobjects.GithubItemContainer
 import com.example.immoscout24.valueobjects.GithubRepository
 import com.example.immoscout24.valueobjects.ReadMe
+import kong.unirest.Unirest
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.getForObject
 import java.net.URL
-
 
 @Service
 class GithubAnalyzerService {
@@ -19,24 +24,56 @@ class GithubAnalyzerService {
             repoName: String
     ): AnalysisResult {
 
-        val restTemplate = RestTemplate()
-        val result = restTemplate.getForObject<GithubRepository>("https://api.github.com/search/repositories?q=repo:$repoOwner/$repoName", GithubRepository::class.java)!!
+        validateLoggedInUser(loggedInUser)
+        validateRepoName(repoName)
+        validateRepoOwner(repoOwner)
 
-        var numOfCommits = 0
-        //TODO fix it
-//        for (i in 1..20) {
-//            numOfCommits += restTemplate.getForObject<List<GithubItemContainer>>(result.items[0].commits_url.replace("{/sha}", "") + "?page=$i", List::class.java).count()
-//        }
-        numOfCommits = restTemplate.getForObject<List<GithubItemContainer>>(result.items[0].commits_url.replace("{/sha}", "") + "?per_page=100", List::class.java).count()
-        val numOfPrs = restTemplate.getForObject<List<GithubItemContainer>>(result.items[0].pulls_url.replace("{/number}", ""), List::class.java).count()
-        val readme = restTemplate.getForObject<ReadMe>("https://api.github.com/repos/$repoOwner/$repoName/readme", ReadMe::class.java)
-        val content = URL(readme?.download_url).readText()
+        val response = Unirest.get("https://api.github.com/repos/$repoOwner/$repoName")
+                .asObject(GithubRepository::class.java)
 
-        return AnalysisResult(
-                repoUrl = result.items[0].html_url,
-                numOfCommits = numOfCommits.toLong(),
-                readMe = content,
-                numOfPrs = numOfPrs.toLong()
-        )
+        if (response.isSuccess) {
+            val body = response.body
+            val pullRequestsCount = getPullRequestsCount(body.preparePullsUrl().plus("?per_page=100"))
+            val pullCommitsCount = getCommitsCount(body.prepareCommitUrl().plus("?per_page=100"))
+            val content = getReadMe("https://api.github.com/repos/$repoOwner/$repoName/readme")
+            return AnalysisResult(
+                    repoUrl = body.html_url,
+                    numOfCommits = pullCommitsCount,
+                    readMe = content,
+                    numOfPrs = pullRequestsCount
+            )
+        } else {
+            throw InvalidRepositoryRequest("Couldn't Identify Repository with the given input[$repoOwner:$repoName]")
+        }
+    }
+
+    private fun getPullRequestsCount(url: String): Long {
+        val result = Unirest.get(url)
+                .asObject(Array<GithubItemContainer>::class.java)
+        if (result.isSuccess) {
+            return result.body.size.toLong()
+        } else {
+            throw InvalidPullRequestRequest("Unexpected error while requesting [$url]")
+        }
+    }
+
+    private fun getCommitsCount(url: String): Long {
+        val result = Unirest.get(url)
+                .asObject(Array<GithubItemContainer>::class.java)
+        if (result.isSuccess) {
+            return result.body.size.toLong()
+        } else {
+            throw InvalidCommitsRequest("Unexpected error while requesting [$url]")
+        }
+    }
+
+    private fun getReadMe(url: String): String {
+        val result = Unirest.get(url)
+                .asObject(ReadMe::class.java)
+        if (result.isSuccess) {
+            return URL(result.body.download_url).readText()
+        } else {
+            throw InvalidReadMeRequest("Unexpected error while requesting [$url]")
+        }
     }
 }
