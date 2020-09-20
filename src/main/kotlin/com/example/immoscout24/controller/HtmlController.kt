@@ -2,7 +2,9 @@ package com.example.immoscout24.controller
 
 import com.example.immoscout24.service.HtmlService
 import com.example.immoscout24.valueobjects.AnalyzingInput
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -12,6 +14,8 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.servlet.ModelAndView
+
 
 @Controller
 class HtmlController(
@@ -20,7 +24,10 @@ class HtmlController(
 
     @GetMapping("/")
     fun index(model: Model): String {
-        return "index"
+        val auth = SecurityContextHolder.getContext().authentication
+        return if (auth !is AnonymousAuthenticationToken) {
+            "redirect:landing"
+        } else "index"
     }
 
     @GetMapping("/error")
