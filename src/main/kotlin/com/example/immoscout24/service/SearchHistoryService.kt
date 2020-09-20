@@ -9,8 +9,7 @@ import java.time.LocalDateTime
 class SearchHistoryService(val searchHistoryRepository: SearchHistoryRepository) {
 
     fun findUserSearchResult(username: String) = searchHistoryRepository
-            .findAllByAddedBy(username)
-            .sortedByDescending { it.addedAt }
+            .findAllByAddedByOrderByAddedAtDesc(username)
 
     fun saveSearchHistory(
             repoUrl: String,
