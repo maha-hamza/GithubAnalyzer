@@ -18,10 +18,5 @@ data class GithubItemContainer(
 )
 
 data class ReadMe(
-        val content: String
-) {
-    fun decode(): String {
-        val decodedBytes: ByteArray = Base64.getDecoder().decode(content.replace(" ", "").replace("\n", ""))
-        return String(decodedBytes)
-    }
-}
+        val download_url: String
+)
