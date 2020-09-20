@@ -23,6 +23,11 @@ class HtmlController(
         return "index"
     }
 
+    @GetMapping("/error")
+    fun error(model: Model): String {
+        return "error"
+    }
+
     @GetMapping("/landing")
     fun landing(model: Model,
                 @RegisteredOAuth2AuthorizedClient authorizedClient: OAuth2AuthorizedClient,

@@ -1,5 +1,6 @@
 package com.example.immoscout24.service
 
+import com.example.immoscout24.valueobjects.AnalysisResult
 import com.example.immoscout24.valueobjects.GithubItemContainer
 import com.example.immoscout24.valueobjects.GithubRepository
 import com.example.immoscout24.valueobjects.ReadMe
@@ -39,10 +40,3 @@ class GithubAnalyzerService {
         )
     }
 }
-
-data class AnalysisResult(
-        val repoUrl: String,
-        val numOfCommits: Long,
-        val numOfPrs: Long,
-        val readMe: String
-)

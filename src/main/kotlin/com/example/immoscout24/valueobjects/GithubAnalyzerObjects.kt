@@ -1,7 +1,5 @@
 package com.example.immoscout24.valueobjects
 
-import java.util.*
-
 data class GithubRepository(
         val items: List<Item>
 )
