@@ -1,5 +1,6 @@
 package com.example.immoscout24.service
 
+import com.example.immoscout24.model.SearchHistory
 import com.example.immoscout24.valueobjects.GithubItemContainer
 import com.example.immoscout24.valueobjects.GithubRepository
 import com.example.immoscout24.valueobjects.ReadMe
@@ -16,7 +17,7 @@ class GithubAnalyzerService(val historyService: SearchHistoryService) {
             loggedInUser: String,
             repoOwner: String,
             repoName: String
-    ) {
+    ): List<SearchHistory> {
 
         val restTemplate = RestTemplate()
         val result = restTemplate.getForObject<GithubRepository>("https://api.github.com/search/repositories?q=repo:$repoOwner/$repoName", GithubRepository::class.java)!!
@@ -38,5 +39,6 @@ class GithubAnalyzerService(val historyService: SearchHistoryService) {
                 addedBy = loggedInUser,
                 readme = content
         )
+        return historyService.findUserSearchResult(loggedInUser)
     }
 }

@@ -55,13 +55,13 @@ class HtmlController(
         val loggedInUser = oauth2User.attributes["login"] as String
         model.addAttribute("userName", loggedInUser)
 
-        githubAnalyzerService
+        model["history"] = githubAnalyzerService
                 .analyzeGithub(
                         loggedInUser = loggedInUser,
                         repoOwner = input.repoOwner,
                         repoName = input.repoName
                 )
-        model["history"] = historyService.findUserSearchResult(username = loggedInUser)
+
         return "landing"
     }
 
