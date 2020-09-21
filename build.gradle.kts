@@ -42,6 +42,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+    testImplementation("org.mockito:mockito-core:3.5.11")
+    testImplementation("org.assertj:assertj-core:3.17.2")
 }
 
 tasks.withType<Test> {

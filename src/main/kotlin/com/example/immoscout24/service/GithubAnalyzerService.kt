@@ -24,10 +24,6 @@ class GithubAnalyzerService {
             repoName: String
     ): AnalysisResult {
 
-        validateLoggedInUser(loggedInUser)
-        validateRepoName(repoName)
-        validateRepoOwner(repoOwner)
-
         val response = Unirest.get("https://api.github.com/repos/$repoOwner/$repoName")
                 .asObject(GithubRepository::class.java)
 
