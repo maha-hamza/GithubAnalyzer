@@ -56,20 +56,21 @@ class GithubAnalyzerService {
     private fun getCommitsCount(url: String): Long {
         val result = Unirest.get(url)
                 .asObject(Array<GithubItemContainer>::class.java)
-        if (result.isSuccess) {
-            return result.body.size.toLong()
-        } else {
-            throw InvalidCommitsRequestException("Unexpected error while requesting [$url]")
+        return when {
+            result.isSuccess -> result.body.size.toLong()
+            result.status == 409 -> 0 // specific case for empty repos
+            else -> throw InvalidCommitsRequestException("Unexpected error while requesting [$url]")
         }
     }
 
-    private fun getReadMe(url: String): String {
+    private fun getReadMe(url: String): String? {
         val result = Unirest.get(url)
                 .asObject(ReadMe::class.java)
-        if (result.isSuccess) {
-            return URL(result.body.download_url).readText()
-        } else {
-            throw InvalidReadMeRequestException("Unexpected error while requesting [$url]")
+        println(result.status)
+        return when {
+            result.isSuccess -> URL(result.body.download_url).readText()
+            result.status == 404 -> null
+            else -> throw InvalidReadMeRequestException("Unexpected error while requesting [$url]")
         }
     }
 }

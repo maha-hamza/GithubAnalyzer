@@ -49,7 +49,7 @@ application should do the following
                          i.e. If the prs less than 100 you will get the accurate number , otherwise you will be 100 as maximum
                          The same for Commits
                          [Next Step to be Considered] -> Introduced proper pagination to retrieve accurate counts for more than 100 result
-
+* When repo is empty , 409 status if returned from commits endpoint, this is handled manually for now
 ### How to Run
 * [gradle clean build] (It will build the app for you in addition to generating needed flyway things)
 * [docker-compose build && docker-compose up] (let's build and start our aoo WhooooHoo)

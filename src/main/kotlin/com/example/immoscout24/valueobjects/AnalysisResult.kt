@@ -4,5 +4,5 @@ data class AnalysisResult(
         val repoUrl: String,
         val numOfCommits: Long,
         val numOfPrs: Long,
-        val readMe: String
+        val readMe: String?
 )
