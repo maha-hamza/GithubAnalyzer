@@ -64,7 +64,7 @@ class GithubAnalyzerService {
     private fun getReadMe(url: String): String? {
         val result = Unirest.get(url)
                 .asObject(ReadMe::class.java)
-        println(result.status)
+
         return when {
             result.isSuccess -> URL(result.body.download_url).readText()
             result.status == 404 -> null
