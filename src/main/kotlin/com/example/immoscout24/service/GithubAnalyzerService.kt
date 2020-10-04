@@ -4,9 +4,6 @@ import com.example.immoscout24.exceptions.InvalidCommitsRequestException
 import com.example.immoscout24.exceptions.InvalidPullRequestRequestException
 import com.example.immoscout24.exceptions.InvalidReadMeRequestException
 import com.example.immoscout24.exceptions.InvalidRepositoryRequestException
-import com.example.immoscout24.service.utils.validateLoggedInUser
-import com.example.immoscout24.service.utils.validateRepoName
-import com.example.immoscout24.service.utils.validateRepoOwner
 import com.example.immoscout24.valueobjects.AnalysisResult
 import com.example.immoscout24.valueobjects.GithubItemContainer
 import com.example.immoscout24.valueobjects.GithubRepository
@@ -54,7 +51,8 @@ class GithubAnalyzerService {
     }
 
     private fun getCommitsCount(url: String): Long {
-        val result = Unirest.get(url)
+        val ur = "https://api.github.com/repos/nestjs/nest-cli/commits?per_page=1 | sed -n '/^[Ll]ink:/ s/.*\"next\".*page=\\([0-9]*\\).*\"last\".*/\\1/p'"
+        val result = Unirest.get(ur)
                 .asObject(Array<GithubItemContainer>::class.java)
         return when {
             result.isSuccess -> result.body.size.toLong()
